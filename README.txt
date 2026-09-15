@@ -1,0 +1,1 @@
+Upload index.html and dalevor-game.html to the root of your GitHub repository. The portfolio images, CSS, and JavaScript are embedded directly inside index.html, so no separate asset files are required.

@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#11130f">
+<title>Project DALEVOR — Nuclear Propulsion Workshop</title>
+<style>
+:root{
+  --bg:#0b0d0a;--panel:#20231d;--panel2:#2a2f26;--edge:#646a57;--edge2:#44493c;
+  --text:#ddd9c1;--muted:#979b88;--amber:#d9a650;--green:#9fc57b;--red:#dc705c;
+  --cream:#eee7ca;--crt:#102015;--shadow:#0009;--btn:#4b503f;--btn2:#32362b;
+}
+*{box-sizing:border-box}
+html{background:var(--bg)}
+body{margin:0;min-height:100%;background:radial-gradient(circle at 50% 0,#282c23 0,#11130f 44%,#090b08 100%);color:var(--text);font-family:"Courier New",ui-monospace,SFMono-Regular,Consolas,monospace;padding:16px}
+button,input{font:inherit}
+button{cursor:pointer;color:inherit}
+button:focus-visible,input:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+.app{width:min(1200px,100%);margin:0 auto}
+.metal{background:linear-gradient(145deg,#30352a,#191c17 72%);border:1px solid var(--edge);box-shadow:inset 0 0 0 2px #10120e,0 6px 18px var(--shadow)}
+.rivets{position:relative}.rivets:before,.rivets:after{content:"";position:absolute;width:7px;height:7px;border-radius:50%;background:#11130e;border:1px solid #7b806b;top:6px}.rivets:before{left:6px}.rivets:after{right:6px}
+.amber{color:var(--amber)}.green{color:var(--green)}.red{color:var(--red)}.muted{color:var(--muted)}
+.top{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;margin-bottom:12px}
+.brand,.statusPlate{padding:14px 16px}.brand h1{margin:0;font-size:clamp(24px,4vw,38px);letter-spacing:.16em;color:var(--cream)}.brand p{margin:5px 0 0;font-size:11px;letter-spacing:.11em;color:var(--amber)}
+.statusPlate{min-width:230px;display:grid;grid-template-columns:auto auto;gap:4px 14px;align-items:center}.statusPlate .k{font-size:10px;color:var(--muted)}.statusPlate .v{text-align:right;font-weight:bold}.impact{font-size:22px;color:var(--red)}
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:12px}.toolBtn{min-height:42px;padding:9px 12px;background:linear-gradient(var(--btn),var(--btn2));border:1px solid #747a65}.toolBtn[aria-pressed="true"]{border-color:var(--amber);color:var(--cream)}
+.tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}.tab{min-height:70px;text-align:left;padding:10px;background:#181b16;border:1px solid #4c5142;color:#777c6b}.tab b{display:block;letter-spacing:.09em;font-size:13px}.tab span{font-size:10px}.tab.active{background:#2a2f25;border-color:var(--amber);color:var(--cream);box-shadow:inset 0 0 14px #d9a65015}.tab.done{color:var(--green)}.tab:disabled{cursor:not-allowed;opacity:.65}
+.workspace{display:grid;grid-template-columns:minmax(0,1.14fr) minmax(330px,.86fr);gap:12px}.panel{padding:15px}.panelHead{display:flex;align-items:center;gap:9px;padding-bottom:8px;margin-bottom:11px;border-bottom:1px solid #555a49}.panelHead h2{font-size:14px;margin:0;letter-spacing:.1em;color:var(--cream)}
+.lamp{width:11px;height:11px;border-radius:50%;display:inline-block;border:1px solid #8f6c62;background:#5c2921}.lamp.amberLamp{background:var(--amber);box-shadow:0 0 9px #d9a65088}.lamp.greenLamp{background:var(--green);box-shadow:0 0 9px #9fc57b99}.lamp.redLamp{background:var(--red);box-shadow:0 0 9px #dc705c99}
+.crt{position:relative;min-height:258px;padding:17px;border:9px solid #0c0e0b;border-radius:9px;background:var(--crt);box-shadow:inset 0 0 28px #000;color:#a9ca88;text-shadow:0 0 4px #86ad6955;overflow:hidden;line-height:1.5;font-size:13px}.crt:after{content:"";pointer-events:none;position:absolute;inset:0;background:repeating-linear-gradient(to bottom,transparent 0,transparent 3px,#0002 4px)}
+.missionCard{margin-top:11px;background:#171914;border:1px solid #535849;padding:12px}.missionCard h3{margin:0 0 7px;color:var(--amber);font-size:12px;letter-spacing:.09em}.missionCard p{margin:0 0 9px;line-height:1.45}.reqs{display:grid;grid-template-columns:1fr 1fr;gap:8px}.req{padding:8px;background:#20231d;border-left:3px solid #777;font-size:11px}.req.pass{border-color:var(--green);color:#cde2b4}.req.fail{border-color:var(--red);color:#e8b2a7}
+.gauges{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:11px}.gaugeBox{min-width:0;padding:10px;background:#11130f;border:1px solid #515646;text-align:center}.gaugeTitle{font-size:10px;color:var(--muted);letter-spacing:.07em}.dial{width:min(126px,100%);aspect-ratio:1;border-radius:50%;position:relative;margin:7px auto 6px;background:radial-gradient(circle,#24281f 0 58%,#12140f 59%);border:4px solid #696f5b;overflow:hidden}.dial:before{content:"";position:absolute;inset:13%;border:2px dashed #777c68;border-radius:50%}.needle{position:absolute;width:3px;height:36%;left:calc(50% - 1.5px);bottom:50%;background:#e2dac0;transform-origin:50% 100%;transform:rotate(-105deg);border-radius:2px;transition:transform .16s ease}.hub{position:absolute;width:12px;height:12px;left:calc(50% - 6px);top:calc(50% - 6px);border-radius:50%;background:#2c3027;border:1px solid #b0b09f}.limits{display:flex;justify-content:space-between;gap:10px;color:#9b9e8d;font-size:9px;white-space:nowrap}.metric{font-size:16px;color:var(--cream);font-weight:bold;margin-top:4px}
+.controls{display:grid;gap:10px}.control{background:#171914;border:1px solid #4f5445;padding:11px}.controlTop{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;margin-bottom:7px}.control label{font-size:11px;color:var(--cream);font-weight:bold}.readout{font-size:12px;color:var(--amber);white-space:nowrap}input[type=range]{width:100%;accent-color:#ae8442}.scale{display:flex;justify-content:space-between;color:#7f8372;font-size:9px;margin-top:4px}.textInput{margin-top:7px;width:100%;padding:9px;background:#10130f;border:1px solid #606552;color:var(--cream);font-size:16px}
+.mathBox{margin-top:10px}.mathBox input{margin-top:7px;width:100%;padding:9px;background:#10130f;border:1px solid #606552;color:var(--cream);font-size:16px}
+.runBtn{width:100%;min-height:50px;margin-top:11px;padding:12px;background:linear-gradient(#7a3d30,#4f241c);border:2px solid #aa6552;color:#f3dfca;font-weight:bold;letter-spacing:.13em;box-shadow:inset 0 0 0 2px #35150f,0 3px 0 #100706}.runBtn:active{transform:translateY(2px);box-shadow:inset 0 0 0 2px #35150f}
+.result{margin-top:11px;min-height:120px;padding:11px;background:#11130f;border:1px solid #505545}.score{font-size:22px;color:var(--amber);font-weight:bold;margin-top:7px}.hint{font-size:11px;color:var(--muted);margin-top:7px;line-height:1.4}.scoreGrid{display:grid;grid-template-columns:1fr auto;gap:5px 10px;margin-top:10px;font-size:11px}.scoreGrid b{color:var(--cream)}
+.actionRow{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.secondary,.nextBtn{min-height:44px;padding:10px}.secondary{background:linear-gradient(#565b49,#363a2f);border:1px solid #777d67}.nextBtn{width:100%;margin-top:9px;background:linear-gradient(#667447,#43502f);border:2px solid #91a56c;color:#f0f3e2;font-weight:bold}.hidden{display:none!important}
+.physicsPanel{margin-top:10px;line-height:1.5}.physicsPanel .eq{text-align:center;font-size:18px;color:var(--amber);font-weight:bold;margin:10px 0}
+.instructor{margin-top:12px;padding:12px}.instructorRow{display:flex;flex-wrap:wrap;gap:8px;justify-content:space-between;align-items:center}.footer{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;margin-top:10px;font-size:9px;color:#777c6b}
+.splash{position:fixed;inset:0;z-index:20;background:radial-gradient(circle at 50% 20%,#20271d,#090b08 65%);display:flex;align-items:center;justify-content:center;padding:18px}.splashBox{width:min(760px,100%);padding:22px;background:linear-gradient(145deg,#2c3127,#171a15);border:1px solid #727864;box-shadow:inset 0 0 0 2px #10120e,0 20px 70px #000}.splash h1{font-size:clamp(28px,7vw,52px);letter-spacing:.16em;margin:0;color:var(--cream)}.splash p{line-height:1.5}.bootLines{padding:13px;background:#0e1c12;border:6px solid #0b0e0b;color:#a9ca88;min-height:130px}.startBtn{width:100%;min-height:52px;margin-top:13px;background:linear-gradient(#666f4d,#3d472e);border:2px solid #97aa73;color:#eff1de;font-weight:bold;letter-spacing:.12em}
+.toast{position:fixed;right:16px;bottom:16px;z-index:15;max-width:330px;padding:10px 12px;background:#151811;border:1px solid #656b57;box-shadow:0 8px 24px #000;color:var(--text);font-size:11px;display:none}.toast.show{display:block}
+.flicker{animation:flicker .24s linear 2}@keyframes flicker{0%,100%{opacity:1}45%{opacity:.72}55%{opacity:.92}}
+.shake{animation:shake .18s linear 2}@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-2px)}75%{transform:translateX(2px)}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}.needle,.flicker,.shake{transition:none!important;animation:none!important}}
+@media(max-width:850px){.workspace{grid-template-columns:1fr}.top{grid-template-columns:1fr}.statusPlate{min-width:0}.tabs{grid-template-columns:1fr 1fr}}
+@media(max-width:570px){body{padding:9px}.tabs,.gauges,.reqs,.actionRow{grid-template-columns:1fr}.limits{white-space:normal}.brand h1{letter-spacing:.1em}.statusPlate{grid-template-columns:1fr auto}}
+</style>
+
+<div class="splash" id="splash">
+  <div class="splashBox rivets">
+    <div class="amber" style="font-size:11px;letter-spacing:.13em">CONTINUITY DIRECTIVE // AUTHORIZED PERSONNEL ONLY</div>
+    <h1>PROJECT DALEVOR</h1>
+    <p>ASTERION is on a confirmed collision course with Earth. The Mars continuity mission cannot launch until its nuclear thermal propulsion system is certified.</p>
+    <div class="bootLines" id="bootLines">DALEVOR TERMINAL LINK ESTABLISHED.<br>REACTOR SIMULATION CORE ........ STANDBY<br>PROPULSION TEST NETWORK ........ STANDBY<br>MARS MISSION AUTHORITY ......... LOCKED</div>
+    <button type="button" class="startBtn" id="startMission">INITIALIZE TRAINING SYSTEM</button>
+    <div class="muted" style="font-size:10px;margin-top:9px">Sound starts only after you initialize the system. You can mute it at any time.</div>
+  </div>
+</div>
+
+<div class="app" id="appCore" aria-hidden="true">
+  <div class="top">
+    <div class="brand metal rivets"><h1>PROJECT DALEVOR</h1><p>NUCLEAR PROPULSION DEVELOPMENT DIVISION // WORKSHOP TERMINAL</p></div>
+    <div class="statusPlate metal rivets">
+      <div class="k">ASTERION IMPACT</div><div class="v impact" id="countdown">T−427 DAYS</div>
+      <div class="k">MISSION STATE</div><div class="v amber" id="missionState">TRAINING ACTIVE</div>
+    </div>
+  </div>
+
+  <div class="toolbar">
+    <button type="button" class="toolBtn" id="soundBtn" aria-pressed="true">SOUND: ON</button>
+    <button type="button" class="toolBtn" id="helpBtn">HOW TO PLAY</button>
+    <span class="muted" style="font-size:10px">Workshop build 1.0 • Scores are local to this browser session</span>
+  </div>
+
+  <div class="tabs" id="tabs"></div>
+
+  <div class="workspace">
+    <section class="panel metal rivets" id="missionPanel">
+      <div class="panelHead"><span class="lamp greenLamp" id="missionLamp"></span><h2 id="levelTitle"></h2></div>
+      <div class="crt" id="brief"></div>
+      <div class="missionCard">
+        <h3 id="testTitle"></h3><p id="testDesc"></p><div class="reqs" id="reqs"></div>
+      </div>
+      <div class="gauges" id="gauges"></div>
+    </section>
+
+    <aside class="panel metal rivets" id="controlPanel">
+      <div class="panelHead"><span class="lamp amberLamp" id="controlLamp"></span><h2>ENGINE CONTROL PANEL</h2></div>
+      <div class="controls" id="controls"></div>
+      <div class="control mathBox" id="mathBox"></div>
+      <button type="button" class="runBtn" id="runBtn">RUN TEST</button>
+      <div class="result" aria-live="polite">
+        <div id="resultText">ENGINE ARMED. Configure the system and begin the test.</div>
+        <div class="score" id="scoreText">—</div>
+        <div class="hint" id="hintText"></div>
+        <div id="scoreDetail"></div>
+      </div>
+      <div class="actionRow"><button type="button" class="secondary" id="physicsBtn">PHYSICS FILE</button><button type="button" class="secondary" id="resetBtn">RESET LEVEL</button></div>
+      <button type="button" class="nextBtn hidden" id="nextBtn">PROCEED TO NEXT LEVEL</button>
+      <div class="control physicsPanel hidden" id="physicsPanel"></div>
+    </aside>
+  </div>
+
+  <div class="instructor metal rivets">
+    <div class="instructorRow"><div><b class="amber">INSTRUCTOR / TEST CONTROLS</b><div class="muted" style="font-size:10px">Use these while rehearsing. Students normally progress by passing levels.</div></div><div style="display:flex;flex-wrap:wrap;gap:8px"><button type="button" class="secondary" id="unlockBtn">UNLOCK ALL LEVELS</button><button type="button" class="secondary" id="restartBtn">RESTART CAMPAIGN</button></div></div>
+  </div>
+
+  <div class="footer"><span>EDUCATIONAL NTP MODEL // NOT REACTOR DESIGN SOFTWARE</span><span>PROJECT DALEVOR // SEPTEMBER 2026 WORKSHOP EDITION</span></div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+(()=>{
+'use strict';
+const root=document.getElementById('appCore');
+const q=id=>document.getElementById(id);
+const g0=9.80665;
+let current=1,unlockAll=false,soundOn=true,audioCtx=null;
+const done={1:false,2:false,3:false,4:false},scores={};
+
+const levels={
+1:{name:'FIRST IGNITION',days:427,test:'STATIC FIRE TEST 01-A',desc:'Produce controlled thrust inside the test-stand certification band.',brief:`<b>DALEVOR TRAINING SYSTEM ONLINE.</b><br><br>ASTERION trajectory confirmed.<br>Continuity directive authorized.<br>Mars transfer propulsion remains <span class='red'>UNQUALIFIED</span>.<br><br>Your first assignment is to prove that the engine can generate controlled thrust.<br><br><span class='amber'><b>F = ṁ × vₑ</b></span><br><br>F = thrust [N]<br>ṁ = hydrogen mass flow [kg/s]<br>vₑ = effective exhaust velocity [m/s]<br><br>Set the controls. Predict the thrust if you want the math bonus. Then run the engine.`,physics:`<b class='amber'>PHYSICS FILE // THRUST</b><div class='eq'>F = ṁvₑ</div>Momentum flow gives the simplified rocket-thrust relationship.<br><br>Example: 10 kg/s × 8,000 m/s = 80,000 N = 80 kN.<br><br>Level 1 lets you choose exhaust velocity directly. Later levels remove that shortcut.`},
+2:{name:'EFFICIENCY TRIAL',days:381,test:'PROPULSION TEST 02-C',desc:'Meet the thrust requirement while achieving high specific impulse and controlling propellant consumption.',brief:`<b>LEVEL 02 AUTHORIZATION ACCEPTED.</b><br><br>Static-fire capability confirmed. Mission planners now require an engine that does more than push hard.<br><br>Every kilogram of hydrogen carried to Mars matters.<br><br><span class='amber'><b>Iₛₚ = vₑ / g₀</b></span><br><br>Specific impulse tells us how effectively the engine uses propellant. Higher exhaust velocity produces higher Iₛₚ.<br><br>Your burn duration is fixed at <span class='amber'>180 seconds</span>. Meet the thrust requirement while preserving propellant.`,physics:`<b class='amber'>PHYSICS FILE // SPECIFIC IMPULSE</b><div class='eq'>Iₛₚ = vₑ / g₀</div>g₀ = 9.80665 m/s².<br><br>An exhaust velocity of 8,826 m/s corresponds to about 900 s of specific impulse. Fuel used during a fixed burn is mass flow × burn time.`},
+3:{name:'REACTOR TEST',days:312,test:'HOT REACTOR TEST 03-R',desc:'Generate performance using reactor outlet temperature, hydrogen flow, and nozzle efficiency without violating the thermal envelope.',brief:`<b>REACTOR ACCESS GRANTED.</b><br><br>The training computer is relinquishing direct control of exhaust velocity.<br><br>Hydrogen now passes through the reactor, absorbs fission heat, and expands through the nozzle.<br><br>Higher outlet temperature generally improves specific impulse—but reactor materials and thermal power impose limits.<br><br><span class='amber'><b>YOUR JOB: BALANCE PERFORMANCE AGAINST SURVIVABILITY.</b></span>`,physics:`<b class='amber'>PHYSICS FILE // REACTOR COUPLING</b><br><br>This workshop uses a simplified educational model calibrated to typical solid-core nuclear thermal propulsion performance ranges.<br><br>Iₛₚ rises with reactor outlet temperature. Exhaust velocity is then vₑ = Iₛₚg₀. Thermal power is approximated with P ≈ ṁcₚΔT using an effective high-temperature hydrogen heat-capacity value.<br><br>Real NTP analysis requires detailed thermochemistry, pressure losses, reactor physics, materials models, and nozzle flow.`},
+4:{name:'MARS CERTIFICATION',days:211,test:'DALEVOR-1 FLIGHT CERTIFICATION',desc:'Design the final Mars engine. Meet every mandatory limit, then optimize the total system for the workshop competition.',brief:`<b>FINAL AUTHORIZATION RECEIVED.</b><br><br>ASTERION IMPACT: <span class='red'>T−211 DAYS</span><br>MARS TRANSFER VEHICLE: DALEVOR-1<br>CREW MANIFEST: 8<br><br>Engine design authority has been transferred to your terminal.<br><br>You control reactor outlet temperature, hydrogen flow, nozzle efficiency, and shielding mass.<br><br>Pass every mandatory requirement. Then optimize the design.<br><br><span class='amber'><b>HUMANITY DOES NOT NEED THE MOST POWERFUL ENGINE. IT NEEDS THE BEST ENGINE THAT SURVIVES.</b></span>`,physics:`<b class='amber'>PHYSICS FILE // SYSTEM OPTIMIZATION</b><br><br>Engineering optimization rarely has one perfect answer. Increasing temperature can improve specific impulse but reduces thermal margin. Increasing mass flow raises thrust but also raises reactor power and propellant consumption. Additional shielding improves the workshop safety metric but adds system mass.<br><br>The final score rewards balanced performance rather than simply maximizing every control.`}
+};
+
+function clamp(x,a,b){return Math.max(a,Math.min(b,x))}
+function ensureAudio(){if(!soundOn)return null;if(!audioCtx){const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return null;audioCtx=new AC()}if(audioCtx.state==='suspended')audioCtx.resume();return audioCtx}
+function tone(freq=440,dur=.08,type='square',gain=.035,delay=0){const ac=ensureAudio();if(!ac)return;const o=ac.createOscillator(),g=ac.createGain();o.type=type;o.frequency.value=freq;g.gain.setValueAtTime(0,ac.currentTime+delay);g.gain.linearRampToValueAtTime(gain,ac.currentTime+delay+.01);g.gain.exponentialRampToValueAtTime(.0001,ac.currentTime+delay+dur);o.connect(g);g.connect(ac.destination);o.start(ac.currentTime+delay);o.stop(ac.currentTime+delay+dur+.02)}
+function clickSound(){tone(180,.045,'square',.022);tone(240,.04,'square',.016,.03)}
+function bootSound(){tone(180,.12,'square',.028);tone(240,.12,'square',.028,.13);tone(360,.16,'square',.028,.26)}
+function successSound(){tone(330,.12,'triangle',.035);tone(440,.12,'triangle',.035,.12);tone(660,.22,'triangle',.04,.24)}
+function failSound(){tone(150,.16,'sawtooth',.035);tone(110,.22,'sawtooth',.035,.12)}
+function engineSound(){const ac=ensureAudio();if(!ac)return;const o=ac.createOscillator(),g=ac.createGain();o.type='sawtooth';o.frequency.setValueAtTime(55,ac.currentTime);o.frequency.exponentialRampToValueAtTime(95,ac.currentTime+.55);g.gain.setValueAtTime(.0001,ac.currentTime);g.gain.exponentialRampToValueAtTime(.028,ac.currentTime+.08);g.gain.exponentialRampToValueAtTime(.0001,ac.currentTime+.72);o.connect(g);g.connect(ac.destination);o.start();o.stop(ac.currentTime+.75)}
+function toast(msg){const t=q('toast');t.textContent=msg;t.classList.add('show');clearTimeout(t._timer);t._timer=setTimeout(()=>t.classList.remove('show'),2400)}
+
+function reactor(T,m,eta,shield=1000){const baseIsp=830+((T-2300)/800)*170;const isp=baseIsp*(eta/.97);const ve=isp*g0;const thrust=m*ve/1000;const power=m*16*(T-300)/1000;const mass=2200+3.2*power+shield;return{T,m,eta,shield,isp,ve,thrust,power,mass}}
+function angle(v,a,b){return -105+((clamp(v,a,b)-a)/(b-a))*210}
+function gauge(title,value,unit,min,max,id){return `<div class='gaugeBox'><div class='gaugeTitle'>${title}</div><div class='dial'><div id='needle-${id}' class='needle'></div><div class='hub'></div></div><div class='limits'><span>${min} ${unit}</span><span>${max} ${unit}</span></div><div class='metric'>${value} ${unit}</div></div>`}
+function slider(id,label,min,max,step,value,unit){return `<div class='control'><div class='controlTop'><label for='${id}'>${label}</label><span id='out-${id}' class='readout'>${value} ${unit}</span></div><input id='${id}' type='range' min='${min}' max='${max}' step='${step}' value='${value}'><div class='scale'><span>${min}</span><span>${max} ${unit}</span></div></div>`}
+function req(text,pass){return `<div class='req ${pass?'pass':'fail'}'>${pass?'✓':'✕'} ${text}</div>`}
+function levelUnlocked(n){return unlockAll||n===1||done[n-1]}
+function renderTabs(){q('tabs').innerHTML=[1,2,3,4].map(n=>`<button type='button' class='tab ${current===n?'active':''} ${done[n]?'done':''}' data-level='${n}' ${levelUnlocked(n)?'':'disabled'}><b>LEVEL 0${n}</b><span>${levels[n].name}${levelUnlocked(n)?'':' [LOCKED]'}${done[n]?' ✓':''}</span></button>`).join('');q('tabs').querySelectorAll('[data-level]').forEach(btn=>btn.addEventListener('click',()=>{clickSound();current=Number(btn.dataset.level);render()}))}
+function setupControls(){
+  if(current===1){q('controls').innerHTML=slider('c-flow','H₂ MASS FLOW',4,14,.1,7.5,'kg/s')+slider('c-vel','EXHAUST VELOCITY',5000,9500,50,6000,'m/s');q('mathBox').innerHTML=`<b>MATH BONUS</b><div class='muted' style='font-size:10px;margin-top:4px'>Predict thrust before firing. ±1 kN earns +5 points.</div><input id='math-answer' type='number' step='0.1' placeholder='Predicted thrust in kN'>`}
+  if(current===2){q('controls').innerHTML=slider('c-flow','H₂ MASS FLOW',6,14,.1,10,'kg/s')+slider('c-vel','EXHAUST VELOCITY',6500,9300,50,8000,'m/s');q('mathBox').innerHTML=`<b>MATH BONUS</b><div class='muted' style='font-size:10px;margin-top:4px'>Predict specific impulse. ±10 s earns +5 points.</div><input id='math-answer' type='number' step='1' placeholder='Predicted Isp in seconds'>`}
+  if(current===3){q('controls').innerHTML=slider('c-temp','REACTOR OUTLET TEMP',2300,3100,10,2700,'K')+slider('c-flow','H₂ MASS FLOW',6,14,.1,9.5,'kg/s')+slider('c-eff','NOZZLE EFFICIENCY',90,99,1,96,'%');q('mathBox').innerHTML=`<b>ENGINEERING NOTE</b><div class='muted' style='font-size:10px;margin-top:4px'>The computer now couples the reactor and propulsion calculations. Interpret the gauges and satisfy every limit.</div>`}
+  if(current===4){q('controls').innerHTML=`<div class='control'><label for='callsign'><b>ENGINEER CALLSIGN</b></label><input id='callsign' class='textInput' type='text' maxlength='16' value='DALEVOR'></div>`+slider('c-temp','REACTOR OUTLET TEMP',2300,3100,10,2850,'K')+slider('c-flow','H₂ MASS FLOW',7,15,.1,10.5,'kg/s')+slider('c-eff','NOZZLE EFFICIENCY',90,99,1,97,'%')+slider('c-shield','SHIELDING MASS',500,1800,50,1000,'kg');q('mathBox').innerHTML=`<b>FINAL DESIGN</b><div class='muted' style='font-size:10px;margin-top:4px'>Pass every requirement first. Then optimize propulsion, efficiency, thermal margin, and total system balance.</div>`}
+  q('controls').querySelectorAll('input[type=range]').forEach(el=>el.addEventListener('input',()=>{const unit=el.id==='c-temp'?'K':el.id==='c-flow'?'kg/s':el.id==='c-vel'?'m/s':el.id==='c-eff'?'%':'kg';q('out-'+el.id).textContent=(el.step.includes('.')?Number(el.value).toFixed(1):el.value)+' '+unit;updateLive()}))
+}
+function getVals(){if(current===1||current===2)return{m:Number(q('c-flow').value),ve:Number(q('c-vel').value)};const T=Number(q('c-temp').value),m=Number(q('c-flow').value),eta=Number(q('c-eff').value)/100,shield=current===4?Number(q('c-shield').value):1000;return reactor(T,m,eta,shield)}
+function liveMetrics(){const v=getVals();if(current===1)return{thrust:v.m*v.ve/1000,flow:v.m,vel:v.ve};if(current===2)return{thrust:v.m*v.ve/1000,isp:v.ve/g0,fuel:v.m*180};return v}
+function evaluate(){const v=liveMetrics();if(current===1)return{pass:v.thrust>=72&&v.thrust<=82,reqs:[['MIN THRUST ≥ 72 kN',v.thrust>=72],['MAX THRUST ≤ 82 kN',v.thrust<=82]]};if(current===2)return{pass:v.thrust>=75&&v.thrust<=90&&v.isp>=800&&v.fuel<=2100,reqs:[['THRUST 75–90 kN',v.thrust>=75&&v.thrust<=90],['Isp ≥ 800 s',v.isp>=800],['180 s FUEL ≤ 2100 kg',v.fuel<=2100]]};if(current===3)return{pass:v.thrust>=85&&v.isp>=880&&v.T<=3000&&v.power<=450,reqs:[['THRUST ≥ 85 kN',v.thrust>=85],['Isp ≥ 880 s',v.isp>=880],['OUTLET TEMP ≤ 3000 K',v.T<=3000],['THERMAL POWER ≤ 450 MW',v.power<=450]]};return{pass:v.thrust>=95&&v.thrust<=115&&v.isp>=900&&v.power<=500&&v.T<=3050&&v.mass<=5600&&v.shield>=800,reqs:[['THRUST 95–115 kN',v.thrust>=95&&v.thrust<=115],['Isp ≥ 900 s',v.isp>=900],['POWER ≤ 500 MW',v.power<=500],['TEMP ≤ 3050 K',v.T<=3050],['ENGINE MASS ≤ 5600 kg',v.mass<=5600],['SHIELDING ≥ 800 kg',v.shield>=800]]}}
+function updateLive(){const v=liveMetrics(),ev=evaluate();q('reqs').innerHTML=ev.reqs.map(x=>req(x[0],x[1])).join('');let html='',vals=[],ranges=[];
+ if(current===1){html=gauge('THRUST',v.thrust.toFixed(1),'kN',0,120,'a')+gauge('MASS FLOW',v.flow.toFixed(1),'kg/s',4,14,'b')+gauge('EXHAUST VELOCITY',Math.round(v.vel),'m/s',5000,9500,'c');vals=[v.thrust,v.flow,v.vel];ranges=[[0,120],[4,14],[5000,9500]]}
+ if(current===2){html=gauge('THRUST',v.thrust.toFixed(1),'kN',50,120,'a')+gauge('SPECIFIC IMPULSE',Math.round(v.isp),'s',650,950,'b')+gauge('180 s PROPELLANT',Math.round(v.fuel),'kg',1000,2500,'c');vals=[v.thrust,v.isp,v.fuel];ranges=[[50,120],[650,950],[1000,2500]]}
+ if(current===3){html=gauge('THRUST',v.thrust.toFixed(1),'kN',50,130,'a')+gauge('SPECIFIC IMPULSE',Math.round(v.isp),'s',750,1020,'b')+gauge('THERMAL POWER',Math.round(v.power),'MW',200,550,'c');vals=[v.thrust,v.isp,v.power];ranges=[[50,130],[750,1020],[200,550]]}
+ if(current===4){html=gauge('THRUST',v.thrust.toFixed(1),'kN',60,140,'a')+gauge('SPECIFIC IMPULSE',Math.round(v.isp),'s',750,1020,'b')+gauge('ENGINE MASS',Math.round(v.mass),'kg',3500,6500,'c');vals=[v.thrust,v.isp,v.mass];ranges=[[60,140],[750,1020],[3500,6500]]}
+ q('gauges').innerHTML=html;['a','b','c'].forEach((id,i)=>{const n=q('needle-'+id);if(n)n.style.transform=`rotate(${angle(vals[i],ranges[i][0],ranges[i][1])}deg)`})
+}
+function scoreLevel(){const v=liveMetrics(),ev=evaluate();if(!ev.pass)return{pass:false,score:0,detail:[]};let score=0,detail=[];
+ if(current===1){const accuracy=clamp(1-Math.abs(v.thrust-77)/5,0,1),eff=clamp((v.vel-5000)/4500,0,1);score=Math.round(70+20*accuracy+5*eff);const ans=q('math-answer').value;if(ans!==''&&Math.abs(Number(ans)-v.thrust)<=1)score+=5;score=Math.min(100,score);detail=[['THRUST CONTROL',Math.round(70+30*accuracy)],['MATH / EFFICIENCY BONUS',Math.max(0,score-Math.round(70+20*accuracy))]]}
+ if(current===2){const tb=clamp(1-Math.abs(v.thrust-82)/12,0,1),is=clamp((v.isp-800)/150,0,1),fs=clamp((2100-v.fuel)/900,0,1);score=Math.round(55+15*tb+15*is+10*fs);const ans=q('math-answer').value;if(ans!==''&&Math.abs(Number(ans)-v.isp)<=10)score+=5;score=Math.min(100,score);detail=[['THRUST BALANCE',Math.round(25*tb)],['SPECIFIC IMPULSE',Math.round(25*is)],['PROPELLANT CONTROL',Math.round(25*fs)]]}
+ if(current===3){const th=clamp((v.thrust-85)/25,0,1),is=clamp((v.isp-880)/120,0,1),tm=clamp((3000-v.T)/500,0,1),pm=clamp((450-v.power)/150,0,1);score=Math.round(60+10*th+10*is+10*tm+10*pm);detail=[['PROPULSION',Math.round(25*(.5*th+.5*is))],['THERMAL MARGIN',Math.round(25*tm)],['POWER MARGIN',Math.round(25*pm)]]}
+ if(current===4){const prop=clamp(.55*((v.thrust-95)/20)+.45*((v.isp-900)/100),0,1),eff=clamp((v.isp-900)/100,0,1),thermal=clamp(.55*((3050-v.T)/500)+.45*((500-v.power)/180),0,1),mass=clamp((5600-v.mass)/1500,0,1),shield=clamp((v.shield-800)/700,0,1),system=clamp(.65*mass+.35*shield,0,1);const p=Math.round(15+10*prop),e=Math.round(15+10*eff),t=Math.round(15+10*thermal),s=Math.round(15+10*system);score=p+e+t+s;detail=[['PROPULSION',p],['EFFICIENCY',e],['THERMAL MANAGEMENT',t],['SYSTEM BALANCE',s]]}
+ return{pass:true,score,detail}
+}
+function runTest(){clickSound();engineSound();q('missionPanel').classList.add('flicker');q('controlPanel').classList.add('shake');setTimeout(()=>{q('missionPanel').classList.remove('flicker');q('controlPanel').classList.remove('shake')},700);const r=scoreLevel(),lamp=q('controlLamp');
+ if(!r.pass){setTimeout(failSound,520);q('resultText').innerHTML=`<span class='red'><b>TEST ABORTED.</b></span> One or more mandatory constraints are outside the certification envelope.`;q('scoreText').textContent='NO CERTIFICATION';q('hintText').textContent='Read the red requirement indicators, adjust the design, and run again.';q('scoreDetail').innerHTML='';lamp.className='lamp redLamp';return}
+ setTimeout(successSound,520);done[current]=true;scores[current]=Math.max(scores[current]||0,r.score);lamp.className='lamp greenLamp';q('resultText').innerHTML=current===4?`<span class='green'><b>DALEVOR-1 FLIGHT CERTIFIED.</b></span> Mars propulsion package accepted.`:`<span class='green'><b>TEST PASSED.</b></span> Level ${current} certification requirements satisfied.`;q('scoreText').textContent=current===4?`FINAL DALEVOR SCORE: ${r.score}/100`:`LEVEL SCORE: ${r.score}/100`;q('hintText').textContent=current===4?'Record your callsign and score for the workshop competition. You can keep tuning the design to beat it.':'You can improve your score or proceed to the next level.';q('scoreDetail').innerHTML=r.detail.length?`<div class='scoreGrid'>${r.detail.map(x=>`<span>${x[0]}</span><b>${x[1]}/25</b>`).join('')}</div>`:'';q('nextBtn').classList.toggle('hidden',current===4);renderTabs();if(current===4){q('missionState').textContent='FLIGHT CERTIFIED';q('countdown').textContent='MARS WINDOW OPEN';toast((q('callsign')?.value||'ENGINEER')+` certified DALEVOR-1 at ${r.score}/100`)}}
+function render(){const L=levels[current];q('levelTitle').textContent=`MISSION BRIEFING // LEVEL 0${current}: ${L.name}`;q('brief').innerHTML=L.brief;q('testTitle').textContent=L.test;q('testDesc').textContent=L.desc;q('countdown').textContent=`T−${L.days} DAYS`;q('missionState').textContent=current===4?'FINAL CERTIFICATION':'TRAINING ACTIVE';q('resultText').textContent='ENGINE ARMED. Configure the system and begin the test.';q('scoreText').textContent=scores[current]?`BEST SCORE: ${scores[current]}/100`:'—';q('hintText').textContent=current===1?'Tip: calculate before you fire.':current===2?'High exhaust velocity helps Isp; high mass flow helps thrust but burns more hydrogen.':current===3?'Temperature improves performance, but watch power and the 3000 K material limit.':'Balanced designs beat maximum-slider designs.';q('scoreDetail').innerHTML='';q('physicsPanel').innerHTML=L.physics;q('physicsPanel').classList.add('hidden');q('controlLamp').className='lamp amberLamp';q('nextBtn').classList.add('hidden');setupControls();renderTabs();updateLive()}
+
+q('startMission').addEventListener('click',()=>{ensureAudio();bootSound();q('bootLines').innerHTML=`DALEVOR TERMINAL LINK ESTABLISHED.<br>REACTOR SIMULATION CORE ........ <span class='green'>ONLINE</span><br>PROPULSION TEST NETWORK ........ <span class='green'>ONLINE</span><br>MARS MISSION AUTHORITY ......... <span class='amber'>TRAINING ACCESS</span>`;setTimeout(()=>{q('splash').classList.add('hidden');root.setAttribute('aria-hidden','false');render();toast('DALEVOR training system online')},650)})
+q('soundBtn').addEventListener('click',()=>{soundOn=!soundOn;q('soundBtn').setAttribute('aria-pressed',String(soundOn));q('soundBtn').textContent='SOUND: '+(soundOn?'ON':'OFF');if(soundOn){ensureAudio();clickSound()}})
+q('helpBtn').addEventListener('click',()=>{clickSound();toast('Pass each level by satisfying every green requirement. Higher scores reward better tradeoffs.')})
+q('runBtn').addEventListener('click',runTest);q('physicsBtn').addEventListener('click',()=>{clickSound();q('physicsPanel').classList.toggle('hidden')});q('resetBtn').addEventListener('click',()=>{clickSound();render()});q('nextBtn').addEventListener('click',()=>{clickSound();if(current<4){current++;render()}});q('unlockBtn').addEventListener('click',()=>{clickSound();unlockAll=!unlockAll;q('unlockBtn').textContent=unlockAll?'RESTORE LEVEL LOCKS':'UNLOCK ALL LEVELS';renderTabs()});q('restartBtn').addEventListener('click',()=>{clickSound();[1,2,3,4].forEach(n=>{done[n]=false;delete scores[n]});unlockAll=false;current=1;q('unlockBtn').textContent='UNLOCK ALL LEVELS';render();toast('Campaign reset')});
+})();
+</script>
+</body>
+</html>
